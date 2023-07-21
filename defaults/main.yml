@@ -4,6 +4,7 @@
 
 cedar_home: /usr/local/src/CEDAR
 cedar:
+#  version: release-2.6.39
   docker:
     script1: '{{ cedar_home }}/cedar-development/bin/templates/cedar-profile-docker-eval-1.sh'
     script2: '{{ cedar_home }}/cedar-development/bin/templates/cedar-profile-docker-eval-2.sh'

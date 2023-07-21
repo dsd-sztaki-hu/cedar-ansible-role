@@ -68,6 +68,13 @@
     cmd: bash -i -c "cedarcli git clone all"
   tags: cedargits
 
+- name: clone requested version with cedarcli
+  shell:
+    chdir: '{{ cedar_home }}/cedar-cli'
+    cmd: bash -i -c "cedarcli git checkout {{ cedar.version }}"
+  when: cedar.version is defined
+  tags: cedargits
+
 - name: cedarcli cert setup
   shell:
     chdir: '{{ cedar_home }}/cedar-cli'
