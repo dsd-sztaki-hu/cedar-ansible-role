@@ -5,12 +5,22 @@
 cedar_home: /usr/local/src/CEDAR
 cedar:
   docker:
-    srcipt1: '{{ cedar_home }}/cedar-development/bin/templates/cedar-profile-docker-eval-1.sh'
-    srcipt2: '{{ cedar_home }}/cedar-development/bin/templates/cedar-profile-docker-eval-2.sh'
+    script1: '{{ cedar_home }}/cedar-development/bin/templates/cedar-profile-docker-eval-1.sh'
+    script2: '{{ cedar_home }}/cedar-development/bin/templates/cedar-profile-docker-eval-2.sh'
 #    remote:
 #      name:
 #      url:
 #      version:
+  ca:
+    enabled: false
+    password: changeme
+    home: '{{ cedar_home }}/CEDAR_CA'
+    country: US
+    state: CA
+    loc: Stanford
+    org: BMIR
+    org_unit: CEDAR
+    email: metadatacenter@gmail.com
   java:
     home: /usr/lib/jvm/java-17-openjdk-amd64
   cli: '{{ cedar_home }}/cedar-cli/cli.sh'

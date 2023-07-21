@@ -68,6 +68,14 @@
     cmd: bash -i -c "cedarcli git clone all"
   tags: cedargits
 
+- name: cedarcli cert setup
+  shell:
+    chdir: '{{ cedar_home }}/cedar-cli'
+    cmd: bash -i -c "cedarcli git cert ca && cedarcli cert domains"
+  tags: certs
+  when: cedar.ca.enabled
+  notify: enable and restart cedar-infrastructure
+
 - name: change docker build remote and checkout different version
   shell:
     chdir: '{{ cedar_home }}/cedar-docker-build'
