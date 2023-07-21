@@ -1,0 +1,9 @@
+
+- name: enable and restart cedar-infrastructure
+  service: name=cedar-infrastructure enabled=yes state=restarted
+
+- name: enable and restart cedar-microservices
+  service: name=cedar-microservices enabled=yes state=restarted
+
+- name: enable and restart cedar-frontend
+  service: name=cedar-frontend enabled=yes state=restarted

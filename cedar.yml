@@ -1,0 +1,13 @@
+- hosts: cedar
+  module_defaults:
+    shell:
+      executable: /usr/bin/bash
+  remote_user: root
+
+  roles:
+    - cedar
+
+  environment:
+    CEDAR_HOME: "{{ cedar_home }}"
+    JAVA_HOME: "{{ cedar.java.home }}"
+

@@ -1,0 +1,102 @@
+---
+
+- name: download node installer
+  get_url:
+    url: https://deb.nodesource.com/setup_18.x
+    dest: /usr/local/src/nodejs_18_setup
+  register: node_download
+
+- name: configure nodejs repository
+  shell: /usr/bin/bash /usr/local/src/nodejs_18_setup; apt update
+  when: node_download.changed
+
+- name: install nodejs and other packages #npm
+  package:
+    name: net-tools, joe, python3-venv, maven, docker, docker-compose, openjdk-17-jre-headless, nodejs 
+  register: node
+
+- name: npm install -g @angular/cli
+  community.general.npm:
+    name: '@angular/cli'
+    global: true
+
+- name: create cedar dir
+  file:
+    dest: '{{ cedar_home }}'
+    state: directory
+
+- name: clone cedar repo
+  git:
+    repo: https://github.com/metadatacenter/cedar-cli.git
+    dest: '{{ cedar_home }}/cedar-cli'
+
+- name: create python virtual environment
+  shell:
+    chdir: '{{ cedar_home }}/cedar-cli'
+    cmd: python3 -m venv ./.venv
+    creates: '{{ cedar_home }}/cedar-cli/.venv'
+  tags: venv
+
+- name: install python requirements
+  pip:
+    requirements: '{{ cedar_home }}/cedar-cli/requirements.txt'
+    virtualenv: '{{ cedar_home }}/cedar-cli/.venv'
+  tags: requirements
+
+- name: install bash aliases file
+  template:
+    src: aliases.j2
+    dest: '{{ cedar_home }}/aliases'
+  tags: aliases
+
+- name: source aliases in /root/.bashrc
+  lineinfile:
+    path: /root/.bashrc
+    regex: '^\. {{ cedar_home }}/aliases'
+    line: '. {{ cedar_home }}/aliases'
+  tags: aliases
+
+- name: clone all cedar gits
+  shell:
+    chdir: '{{ cedar_home }}/cedar-cli'
+    cmd: source .venv/bin/activate ; python3 cedar.py git clone all
+  tags: cedargits
+
+- name: clone more with cedarcli
+  shell:
+    chdir: '{{ cedar_home }}/cedar-cli'
+    cmd: bash -i -c "cedarcli git clone all"
+  tags: cedargits
+
+- name: change docker build remote and checkout different version
+  shell:
+    chdir: '{{ cedar_home }}/cedar-docker-build'
+    cmd: bash -i -c "git remote | grep -q "dsd" || git remote add {{ cedar.docker.remote.name }} {{ cedar.docker.remote.url }} && git fetch {{ cedar.docker.remote.name }} && git checkout {{ cedar.docker.remote.version }}"
+  when: cedar.docker.remote is defined
+  tags: dockerremote, docker
+
+- name: cedarcli docker one-time-setup
+  shell:
+    chdir: '{{ cedar_home }}/cedar-cli'
+    cmd: bash -i -c "cedarcli docker one-time-setup"
+  tags: docker
+
+- name: cedarcli build all
+  shell:
+    chdir: '{{ cedar_home }}/cedar-cli'
+    cmd: bash -i -c "cedarcli build all"
+  tags: build
+
+- name: install cedar systemd service files
+  template:
+    src: '{{ item }}.service.j2'
+    dest: /etc/systemd/system/{{ item }}.service
+    owner: root
+    group: root
+  with_items:
+    - cedar-infrastructure
+    - cedar-microservices
+    - cedar-frontend
+  notify: enable and restart {{ item }}
+  tags: systemd, services
+

@@ -1,0 +1,10 @@
+export CEDAR_HOME={{ cedar_home }}
+
+alias python=python3
+
+#alias cedarcli='source $CEDAR_HOME/cedar-cli/cli.sh'
+alias cedarcli=$CEDAR_HOME/cedar-cli/cli.sh
+
+# CEDAR Docker related scripts, aliases, environment variables
+source ${CEDAR_HOME}/cedar-development/bin/templates/cedar-profile-docker-eval-1.sh
+source ${CEDAR_HOME}/cedar-development/bin/templates/cedar-profile-docker-eval-2.sh
