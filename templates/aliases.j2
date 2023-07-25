@@ -11,6 +11,9 @@ export CEDAR_CA_ORG_UNIT={{ cedar.ca.org_unit }}
 export CEDAR_CA_COMMON_NAME={{ cedar.domain }}
 export CEDAR_CA_EMAIL={{ cedar.ca.email }}
 
+export CEDAR_FRONTEND_ARP_API_URL=http://{{ cedar.dataverse_url }}/api/arp
+export CEDAR_FRONTEND_ARP_DV_COLLECTION=root
+
 alias python=python3
 
 #alias cedarcli='source $CEDAR_HOME/cedar-cli/cli.sh'

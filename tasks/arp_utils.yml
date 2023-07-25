@@ -1,0 +1,27 @@
+## this is to install some homebrewn extensions, will only run if cedar.arp_utils_repo is defined
+
+- name: generate ssh keypair if not present
+  community.crypto.openssh_keypair:
+    path: /root/.ssh/id_rsa
+  register: ssh_key
+
+- name: the ssh public key -- you need to register this in the git for the cloning to work
+  debug:
+    msg: "{{ ssh_key.public_key }}"
+
+- name: get arp cedar utils from git
+  git:
+    repo: '{{ cedar.arp_utils_repo }}'
+    dest: '{{ cedar_home }}/arp-cedar-utils'
+    accept_hostkey: yes
+
+- name: create builtin folders
+  shell:
+    chdir: '{{ cedar_home }}/arp-cedar-utils'
+    cmd: bash -i -c "python create_builtin_folders.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }} --user-id {{ cedar.admin_user }}"
+
+- name: upload test dump for demoing
+  shell:
+    chdir: '{{ cedar_home }}/arp-cedar-utils'
+    cmd: bash -i -c "python upload_dump.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }} --user-id {{ cedar.admin_user }} --dump-dir ./test_dump"
+

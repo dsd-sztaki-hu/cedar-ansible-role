@@ -5,9 +5,16 @@
 cedar_home: /usr/local/src/CEDAR
 cedar:
 #  version: release-2.6.39
+  admin_user: cedar-admin
   docker:
     script1: '{{ cedar_home }}/cedar-development/bin/templates/cedar-profile-docker-eval-1.sh'
     script2: '{{ cedar_home }}/cedar-development/bin/templates/cedar-profile-docker-eval-2.sh'
+  docker_build:
+#    remote:
+#      name:
+#      url:
+#      version:
+  docker_deploy:
 #    remote:
 #      name:
 #      url:

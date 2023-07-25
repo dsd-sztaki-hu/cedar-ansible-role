@@ -56,6 +56,24 @@
     line: '. {{ cedar_home }}/aliases'
   tags: aliases
 
+- name: generate hosts file part
+  template:
+    src: hosts_part.j2
+    dest: /tmp/cedar_hosts_part
+  tags: hosts
+
+- name: read remote hosts file part
+  register: hosts_file_part
+  shell: cat /tmp/cedar_hosts_part
+  tags: hosts
+
+- name: merge hosts file part
+  blockinfile:
+    block: "{{ hosts_file_part.stdout }}"
+    marker: "# CEDAR ANSIBLE ENTRIES {mark}"
+    path: /etc/hosts
+  tags: hosts
+
 - name: clone all cedar gits
   shell:
     chdir: '{{ cedar_home }}/cedar-cli'
@@ -75,20 +93,33 @@
   when: cedar.version is defined
   tags: cedargits
 
+- name: change docker build remote and checkout different version
+  shell:
+    chdir: '{{ cedar_home }}/cedar-docker-build'
+    cmd: bash -i -c "git remote | grep -q "{{ cedar.docker_build.remote.name }}" ||
+         git remote add {{ cedar.docker_build.remote.name }} {{ cedar.docker_build.remote.url }} && 
+         git fetch {{ cedar.docker_build.remote.name }} && 
+         git checkout {{ cedar.docker_build.remote.version }}"
+  when: cedar.docker_build.remote is defined
+  tags: dockerremote, docker
+
+- name: change docker deploy remote and checkout different version
+  shell:
+    chdir: '{{ cedar_home }}/cedar-docker-deploy'
+    cmd: bash -i -c "git remote | grep -q "{{ cedar.docker_deploy.remote.name }}" || 
+         git remote add {{ cedar.docker_deploy.remote.name }} {{ cedar.docker_deploy.remote.url }} && 
+         git fetch {{ cedar.docker_deploy.remote.name }} && 
+         git checkout {{ cedar.docker_deploy.remote.version }}"
+  when: cedar.docker_deploy.remote is defined
+  tags: dockerremote, docker
+
 - name: cedarcli cert setup
   shell:
     chdir: '{{ cedar_home }}/cedar-cli'
     cmd: bash -i -c "cedarcli git cert ca && cedarcli cert domains"
-  tags: certs
   when: cedar.ca.enabled
   notify: enable and restart cedar-infrastructure
-
-- name: change docker build remote and checkout different version
-  shell:
-    chdir: '{{ cedar_home }}/cedar-docker-build'
-    cmd: bash -i -c "git remote | grep -q "dsd" || git remote add {{ cedar.docker.remote.name }} {{ cedar.docker.remote.url }} && git fetch {{ cedar.docker.remote.name }} && git checkout {{ cedar.docker.remote.version }}"
-  when: cedar.docker.remote is defined
-  tags: dockerremote, docker
+  tags: certs
 
 - name: cedarcli docker one-time-setup
   shell:
@@ -115,3 +146,8 @@
   notify: enable and restart {{ item }}
   tags: systemd, services
 
+- meta: flush_handlers
+
+- ansible.builtin.import_tasks: arp_utils.yml
+  when: cedar.arp_utils_repo is defined
+  tags: arp_utils

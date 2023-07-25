@@ -8,6 +8,7 @@ Environment="CEDAR_HOME={{ cedar_home }}"
 Environment="JAVA_HOME={{ cedar.java.home }}"
 WorkingDirectory={{ cedar_home }}
 ExecStart=/usr/bin/bash -i -c startfrontend
+ExecStop=/usr/bin/bash -i -c stopfrontend
 Restart=always
 
 [Install]
