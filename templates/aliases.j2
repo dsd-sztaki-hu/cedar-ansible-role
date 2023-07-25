@@ -1,4 +1,10 @@
 export CEDAR_HOME={{ cedar_home }}
+
+# CEDAR Docker related scripts, aliases, environment variables
+source ${CEDAR_HOME}/cedar-development/bin/templates/cedar-profile-docker-eval-1.sh
+source ${CEDAR_HOME}/cedar-development/bin/templates/cedar-profile-docker-eval-2.sh
+# these are partly overridden below
+
 export CEDAR_HOST={{ cedar.domain }}
 
 export CEDAR_CA_PASSWORD={{ cedar.ca.password }}
@@ -11,14 +17,19 @@ export CEDAR_CA_ORG_UNIT={{ cedar.ca.org_unit }}
 export CEDAR_CA_COMMON_NAME={{ cedar.domain }}
 export CEDAR_CA_EMAIL={{ cedar.ca.email }}
 
-export CEDAR_FRONTEND_ARP_API_URL=http://{{ cedar.dataverse_url }}/api/arp
+# Configs for our additions
+# This is proxied via infra-nginx container to 
+# CEDAR_ARP_DATAVERSE_API_BACKEND_HOST_AND_PORT
+export CEDAR_FRONTEND_ARP_API_URL={{ cedar.dataverse.url }}/api/arp
 export CEDAR_FRONTEND_ARP_DV_COLLECTION=root
+
+{% if cedar.dataverse.host is defined %}
+# to overcome mixed http/https access.
+export CEDAR_ARP_DATAVERSE_API_BACKEND_HOST_AND_PORT={{ cedar.dataverse.host }}:{{ cedar.dataverse.port }}
+{% endif %}
 
 alias python=python3
 
-#alias cedarcli='source $CEDAR_HOME/cedar-cli/cli.sh'
-alias cedarcli=$CEDAR_HOME/cedar-cli/cli.sh
+alias cedarcli='source $CEDAR_HOME/cedar-cli/cli.sh'
+#alias cedarcli=$CEDAR_HOME/cedar-cli/cli.sh
 
-# CEDAR Docker related scripts, aliases, environment variables
-source ${CEDAR_HOME}/cedar-development/bin/templates/cedar-profile-docker-eval-1.sh
-source ${CEDAR_HOME}/cedar-development/bin/templates/cedar-profile-docker-eval-2.sh
