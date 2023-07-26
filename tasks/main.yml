@@ -86,12 +86,13 @@
     cmd: bash -i -c "cedarcli git clone all"
   tags: cedargits
 
-- name: clone requested version with cedarcli
-  shell:
-    chdir: '{{ cedar_home }}/cedar-cli'
-    cmd: bash -i -c "cedarcli git checkout {{ cedar.version }}"
-  when: cedar.version is defined
-  tags: cedargits
+# Don't do this now, we expect that our main version matches the version we want to install. May reveisit later.
+#- name: clone requested version with cedarcli
+#  shell:
+#    chdir: '{{ cedar_home }}/cedar-cli'
+#    cmd: bash -i -c "cedarcli git checkout {{ cedar.version }}"
+#  when: cedar.version is defined
+#  tags: cedargits
 
 - name: change docker build remote and checkout different version
   shell:
