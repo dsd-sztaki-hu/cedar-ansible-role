@@ -114,13 +114,18 @@
   when: cedar.docker_deploy.remote is defined
   tags: dockerremote, docker
 
+- name: Check if ca.crt exists
+  stat:
+    path: /usr/local/src/CEDAR/CEDAR_CA/ca.crt
+  register: ca_cert
+
 - name: cedarcli cert setup
   shell:
     chdir: '{{ cedar_home }}/cedar-cli'
     cmd: bash -i -c "cedarcli cert setup &&
                      cedarcli cert ca &&
                      cedarcli cert domains"
-  when: cedar.ca.enabled
+  when: cedar.ca.enabled and not ca_cert.stat.exists
   notify: enable and restart cedar-infrastructure
   tags: certs
 
