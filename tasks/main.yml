@@ -169,6 +169,61 @@
   notify: enable and restart {{ item }}
   tags: systemd, services
 
+# My solution for starting infra, microservices and frontends sequentially once the depending services are available
+##
+## startinfrastructure --> startmicroservices --> startfrontend
+##
+#- name: Run startinfrastructure in the background
+#  command: bash -i -c 'startinfrastructure'
+#  async: 1
+#  poll: 0
+#
+#- name: Check Infrastructure services status
+#  command: "/usr/local/src/CEDAR/cedar-cli/check_status.sh Infrastructure"
+#  register: result
+#  until: result.stdout == "OK"
+#  retries: 100
+#  delay: 5
+#
+#- name: Fail if Infrastructure services failed to start
+#  fail:
+#    msg: "Infrastructure services failed to start: {{ result.stdout }}"
+#  when: result.stdout != "OK"
+#
+#- name: Run startmicroservices in the background
+#  command: bash -i -c 'startinfrastructure'
+#  async: 1
+#  poll: 0
+#
+#- name: Check Microservices services status
+#  command: "/usr/local/src/CEDAR/cedar-cli/check_status.sh Microservice"
+#  register: result
+#  until: result.stdout == "OK"
+#  retries: 100
+#  delay: 5
+#
+#- name: Fail if Microservices failed to start
+#  fail:
+#    msg: "Microservices failed to start: {{ result.stdout }}"
+#  when: result.stdout != "OK"
+#
+#- name: Run startfrontend in the background
+#  command: bash -i -c 'startfrontend'
+#  async: 1
+#  poll: 0
+#
+#- name: Check Frontend services status
+#  command: "/usr/local/src/CEDAR/cedar-cli/check_status.sh Frontend"
+#  register: result
+#  until: result.stdout == "OK"
+#  retries: 100
+#  delay: 5
+#
+#- name: Fail if Frontend failed to start
+#  fail:
+#    msg: "Frontend failed to start: {{ result.stdout }}"
+#  when: result.stdout != "OK"
+
 - meta: flush_handlers
 
 - ansible.builtin.import_tasks: arp_utils.yml
