@@ -149,6 +149,7 @@
              docker rm cedar-ca-helper'
   tags: docker, certs
 
+# This may not be necessary ...
 - name: cedarcli build all
   shell:
     chdir: '{{ cedar_home }}/cedar-cli'
