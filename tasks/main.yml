@@ -27,7 +27,7 @@
 
 - name: clone cedar repo
   git:
-    repo: https://github.com/metadatacenter/cedar-cli.git
+    repo: https://github.com/dsd-sztaki-hu/cedar-cli.git
     dest: '{{ cedar_home }}/cedar-cli'
 
 - name: create python virtual environment
