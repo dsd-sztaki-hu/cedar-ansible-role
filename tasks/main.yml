@@ -117,7 +117,7 @@
   shell:
     chdir: '{{ cedar_home }}/cedar-cli'
     cmd: bash -i -c "cedarcli cert setup &&
-                     cedarcli git cert ca &&
+                     cedarcli cert ca &&
                      cedarcli cert domains"
   when: cedar.ca.enabled
   notify: enable and restart cedar-infrastructure
