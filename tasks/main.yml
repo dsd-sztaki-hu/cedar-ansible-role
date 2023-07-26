@@ -196,7 +196,7 @@
 #  when: result.stdout != "OK"
 #
 #- name: Run startmicroservices in the background
-#  command: bash -i -c 'startinfrastructure'
+#  command: bash -i -c 'startmicroservices'
 #  async: 1
 #  poll: 0
 #
