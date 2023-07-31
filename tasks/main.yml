@@ -179,7 +179,7 @@
 ## startinfrastructure --> startmicroservices --> startfrontend
 ##
 #- name: Run startinfrastructure in the background
-#  command: bash -i -c 'startinfrastructure'
+#  command: bash -i -c 'startinfrastructure >> /tmp/infra.log'
 #  async: 500
 #  poll: 0
 #
@@ -196,7 +196,7 @@
 #  when: result.stdout != "OK"
 #
 #- name: Run startmicroservices in the background
-#  command: bash -i -c 'startmicroservices'
+#  command: bash -i -c 'startmicroservices  >> /tmp/micro.log'
 #  async: 500
 #  poll: 0
 #
@@ -213,7 +213,7 @@
 #  when: result.stdout != "OK"
 #
 #- name: Run startfrontend in the background
-#  command: bash -i -c 'startfrontend'
+#  command: bash -i -c 'startfrontend  >> /tmp/frontend.log'
 #  async: 500
 #  poll: 0
 #
