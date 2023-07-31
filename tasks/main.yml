@@ -197,14 +197,14 @@
 #
 #- name: Run startmicroservices in the background
 #  command: bash -i -c 'startmicroservices  >> /tmp/micro.log'
-#  async: 500
+#  async: 1000
 #  poll: 0
 #
 #- name: Check Microservices services status
 #  command: "/usr/local/src/CEDAR/cedar-cli/check_status.sh Microservice"
 #  register: result
 #  until: result.stdout == "OK"
-#  retries: 100
+#  retries: 200
 #  delay: 5
 #
 #- name: Fail if Microservices failed to start
