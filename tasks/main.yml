@@ -180,7 +180,7 @@
 ##
 #- name: Run startinfrastructure in the background
 #  command: bash -i -c 'startinfrastructure'
-#  async: 1
+#  async: 500
 #  poll: 0
 #
 #- name: Check Infrastructure services status
@@ -197,7 +197,7 @@
 #
 #- name: Run startmicroservices in the background
 #  command: bash -i -c 'startmicroservices'
-#  async: 1
+#  async: 500
 #  poll: 0
 #
 #- name: Check Microservices services status
@@ -214,7 +214,7 @@
 #
 #- name: Run startfrontend in the background
 #  command: bash -i -c 'startfrontend'
-#  async: 1
+#  async: 500
 #  poll: 0
 #
 #- name: Check Frontend services status
