@@ -15,7 +15,7 @@
     dest: '{{ cedar_home }}/arp-cedar-utils'
     accept_hostkey: yes
 
-- name: Get admin ID from the Python script
+- name: Get admin ID
   shell:
     chdir: '{{ cedar_home }}/arp-cedar-utils'
     cmd: bash -i -c "python get_admin_id.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }}"
