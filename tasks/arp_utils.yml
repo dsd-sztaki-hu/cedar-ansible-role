@@ -9,6 +9,13 @@
   debug:
     msg: "{{ ssh_key.public_key }}"
 
+- name: Check Frontend services status -- we must wait until everything is started
+  command: "/usr/local/src/CEDAR/cedar-cli/check_status.sh Frontend"
+  register: result
+  until: result.stdout == "OK"
+  retries: 100
+  delay: 10
+
 - name: get arp cedar utils from git
   git:
     repo: '{{ cedar.arp_utils_repo }}'
