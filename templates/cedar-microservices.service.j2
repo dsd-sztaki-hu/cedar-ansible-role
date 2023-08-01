@@ -7,7 +7,7 @@ Description=CEDAR microservice service
 Environment="CEDAR_HOME={{ cedar_home }}"
 Environment="JAVA_HOME={{ cedar.java.home }}"
 WorkingDirectory={{ cedar_home }}
-ExecStart=/usr/bin/bash -i -c startmicroservices
+ExecStart=/usr/bin/bash -i -c 'while [ "`/{{ cedar_home }}/cedar-cli/check_status.sh Infrastructure`" != "OK" ] ; do sleep 10; done && startmicroservices'
 ExecStop=/usr/bin/bash -i -c stopmicroservices
 Restart=always
 

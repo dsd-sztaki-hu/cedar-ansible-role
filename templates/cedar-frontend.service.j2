@@ -7,7 +7,7 @@ Description=CEDAR frontend service
 Environment="CEDAR_HOME={{ cedar_home }}"
 Environment="JAVA_HOME={{ cedar.java.home }}"
 WorkingDirectory={{ cedar_home }}
-ExecStart=/usr/bin/bash -i -c startfrontend
+ExecStart=/usr/bin/bash -i -c 'while [ "`/{{ cedar_home }}/cedar-cli/check_status.sh Microserv`" != "OK" ] ; do sleep 10; done && startfrontend'
 ExecStop=/usr/bin/bash -i -c stopfrontend
 Restart=always
 
