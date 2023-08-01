@@ -15,13 +15,19 @@
     dest: '{{ cedar_home }}/arp-cedar-utils'
     accept_hostkey: yes
 
-- name: create builtin folders
+- name: Get admin ID from the Python script
   shell:
     chdir: '{{ cedar_home }}/arp-cedar-utils'
-    cmd: bash -i -c "python create_builtin_folders.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }} --user-id {{ cedar.admin_user }}"
+    cmd: bash -i -c "python get_admin_id.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }}"
+  register: admin_id_output
 
-- name: upload test dump for demoing
+- name: Create builtin folders
   shell:
     chdir: '{{ cedar_home }}/arp-cedar-utils'
-    cmd: bash -i -c "python upload_dump.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }} --user-id {{ cedar.admin_user }} --dump-dir ./test_dump"
+    cmd: bash -i -c "python create_builtin_folders.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }} --user-id {{ admin_id_output.stdout }}"
+
+#- name: upload test dump for demoing
+#  shell:
+#    chdir: '{{ cedar_home }}/arp-cedar-utils'
+#    cmd: bash -i -c "python upload_dump.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }} --user-id {{ cedar.admin_user }} --dump-dir ./test_dump"
 
