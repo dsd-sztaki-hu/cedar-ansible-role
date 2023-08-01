@@ -20,6 +20,7 @@
     chdir: '{{ cedar_home }}/arp-cedar-utils'
     cmd: bash -i -c "python get_admin_id.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }}"
   register: admin_id_output
+  changed_when: false
 
 - name: Create builtin folders
   shell:
