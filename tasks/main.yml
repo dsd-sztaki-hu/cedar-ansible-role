@@ -13,7 +13,24 @@
 - name: install nodejs and other packages #npm
   package:
     name: net-tools, joe, python3-venv, maven, docker.io, docker-compose, openjdk-17-jre-headless, nodejs 
-  register: node
+  register: packages
+
+- name: Reboot the server if fresh install -- this is only needed because of docker
+  shell: "sleep 5 && reboot"
+  async: 1
+  poll: 0
+  register: reboot
+  tags: reboot
+  when: packages.changed
+
+- name: Wait for the reboot and reconnect 
+  wait_for:
+    port: 22
+    host: '{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}'
+    search_regex: OpenSSH
+    delay: 10
+  timeout: 300
+  connection: local
 
 - name: npm install -g @angular/cli
   community.general.npm:
@@ -178,4 +195,4 @@
 
 - ansible.builtin.import_tasks: arp_utils.yml
   when: cedar.arp_utils_repo is defined
-  tags: arp_utils
+  tags: arp_utils, arp, arp-utils

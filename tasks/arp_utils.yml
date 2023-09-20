@@ -14,7 +14,7 @@
   register: result
   until: result.stdout == "OK"
   retries: 100
-  delay: 10
+  delay: 30
 
 - name: get arp cedar utils from git
   git:
