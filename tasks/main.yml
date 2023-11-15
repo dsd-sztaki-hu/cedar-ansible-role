@@ -210,6 +210,9 @@
     chdir: '{{ cedar_home }}/cedar-cli'
     cmd: bash -i -c '
              service cedar-frontend stop &&
+             service cedar-infrastructure stop &&
              docker image rm metadatacenter/cedar-frontend-main:2.6.41 &&
+             docker image rm metadatacenter/cedar-infra-keycloak:2.6.41 &&
+             service cedar-infrastructure start &&
              service cedar-frontend start'
   tags: never, gui
