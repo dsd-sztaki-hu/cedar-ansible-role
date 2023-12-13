@@ -107,6 +107,13 @@
   tags: cedargits, git
   notify: enable and restart cedar
 
+- name: pull with cedarcli to refresh gits
+  shell:
+    chdir: '{{ cedar_home }}/cedar-cli'
+    cmd: bash -i -c "cedarcli git pull"
+  tags: cedargits, git
+  notify: enable and restart cedar
+
 # Don't do this now, we expect that our main version matches the version we want to install. May reveisit later.
 - name: clone requested version with cedarcli
   shell:

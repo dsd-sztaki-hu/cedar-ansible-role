@@ -1,8 +1,11 @@
 export CEDAR_HOME={{ cedar_home }}
 
 # CEDAR Docker related scripts, aliases, environment variables
-source ${CEDAR_HOME}/cedar-development/bin/templates/cedar-profile-docker-eval-1.sh
-source ${CEDAR_HOME}/cedar-development/bin/templates/cedar-profile-docker-eval-2.sh
+#source ${CEDAR_HOME}/cedar-development/bin/templates/cedar-profile-docker-eval-1.sh
+#source ${CEDAR_HOME}/cedar-development/bin/templates/cedar-profile-docker-eval-2.sh
+{% for item in cedar.docker.scripts %}
+source {{ item }}
+{% endfor %}
 # these are partly overridden below
 
 export CEDAR_HOST={{ cedar.domain }}
