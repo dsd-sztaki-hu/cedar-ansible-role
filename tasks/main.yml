@@ -12,7 +12,7 @@
 
 - name: install nodejs and other packages #npm
   package:
-    name: net-tools, joe, python3-venv, maven, docker.io, docker-compose, openjdk-17-jre-headless, nodejs 
+    name: net-tools, joe, python3-venv, maven, docker.io, docker-compose, openjdk-17-jre-headless, nodejs, npm
   register: packages
 
 - name: Reboot the server if fresh install -- this is only needed because of docker
