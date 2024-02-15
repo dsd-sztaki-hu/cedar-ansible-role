@@ -31,13 +31,32 @@ export CEDAR_FRONTEND_ARP_DV_COLLECTION=root
 export CEDAR_ARP_DATAVERSE_API_BACKEND_HOST_AND_PORT={{ cedar.dataverse.host }}:{{ cedar.dataverse.port }}
 {% endif %}
 
+# In production these should be set to sg. Secure.
+# To see all envs use: cedarcli env list
+export CEDAR_CA_PASSWORD="TODO-changeme"
+export CEDAR_KEYCLOAK_ADMIN_PASSWORD="TODO-changeme"
+export CEDAR_KEYCLOAK_MYSQL_PASSWORD="TODO-changeme"
+export CEDAR_LOG_MYSQL_PASSWORD="TODO-changeme"
+export CEDAR_MESSAGING_MYSQL_PASSWORD="TODO-changeme"
+export CEDAR_MONGO_APP_USER_PASSWORD="TODO-changeme"
+export CEDAR_MONGO_ROOT_USER_PASSWORD="TODO-changeme"
+export CEDAR_MYSQL_ROOT_PASSWORD="TODO-changeme"
+export CEDAR_NEO4J_USER_PASSWORD="TODO-changeme"
+export CEDAR_SALT_API_KEY="TODO-changeme"
+export CEDAR_ADMIN_USER_API_KEY="0000111122223333444455556666777788889999aaaabbbbccccddddeeeeffff"
+
+export CEDAR_BIOPORTAL_API_KEY={{ cedar.bioportal_api_key }}
+export CEDAR_BIOPORTAL_REST_BASE="https://data.bioontology.org/"
+export CEDAR_CADSR_ADMIN_USER_API_KEY="0000111122223333444455556666777788889999aaaabbbbccccddddeeeefffe"
+
+
+# Optional: Use other  port than 8080 (eg. when running together with DV which
+# runs at 8080)
+export CEDAR_KEYCLOAK_HTTP_PORT=8080
+
+
 alias python=python3
 
 alias cedarcli='source $CEDAR_HOME/cedar-cli/cli.sh'
 #alias cedarcli=$CEDAR_HOME/cedar-cli/cli.sh
 
-export CEDAR_BIOPORTAL_API_KEY={{ cedar.bioportal_api_key }}
-
-# Optional: Use other  port than 8080 (eg. when running together with DV which
-# runs at 8080)
-export CEDAR_KEYCLOAK_HTTP_PORT=8080
