@@ -37,3 +37,7 @@ alias cedarcli='source $CEDAR_HOME/cedar-cli/cli.sh'
 #alias cedarcli=$CEDAR_HOME/cedar-cli/cli.sh
 
 export CEDAR_BIOPORTAL_API_KEY={{ cedar.bioportal_api_key }}
+
+# Optional: Use other  port than 8080 (eg. when running together with DV which
+# runs at 8080)
+export CEDAR_KEYCLOAK_HTTP_PORT=8080
