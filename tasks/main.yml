@@ -133,6 +133,28 @@
   tags: dockerremote, docker, git
   notify: enable and restart cedar
 
+- name: generate new salt and hash for admin password
+  local_action:
+    module: shell files/generate_password_hash.py {{ cedar.admin_password }}
+  register: password_hasher_output
+  tags: dockerremote, docker, git
+
+- set_fact:
+    cedar_admin_password_salt: "{{ password_hasher_output.stdout_lines[0] }}"
+    cedar_admin_password_hash: "{{ password_hasher_output.stdout_lines[0] }}"
+  tags: dockerremote, docker, git
+
+- name: update admin password in docker build remote
+  replace:
+    path: '{{ cedar_home }}/cedar-docker-build/cedar-infra-keycloak/config/keycloak-realm.CEDAR.development.2023-07-05.json'
+    regexp: '^      "secretData" : .*$'
+    replace: '      "secretData" : "{\"value\":\"{{ cedar_admin_password_hash }}\",\"salt\":\"{{ cedar_admin_password_salt }}\",\"additionalParameters\":{}}",'
+  tags: dockerremote, docker, git
+    
+  when: cedar.docker_build.remote is defined
+  tags: dockerremote, docker, git
+  notify: enable and restart cedar
+
 - name: change docker deploy remote and checkout different version
   shell:
     chdir: '{{ cedar_home }}/cedar-docker-deploy'
