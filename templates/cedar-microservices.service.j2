@@ -8,8 +8,8 @@ Environment="CEDAR_HOME={{ cedar_home }}"
 Environment="JAVA_HOME={{ cedar.java.home }}"
 Environment="CEDAR_BIOPORTAL_API_KEY={{ cedar.bioportal_api_key }}"
 WorkingDirectory={{ cedar_home }}
-ExecStart=/usr/bin/bash -i -c 'while [ "`/{{ cedar_home }}/cedar-cli/check_status.sh Infrastructure`" != "OK" ] ; do sleep 10; done && startmicroservices'
-ExecStop=/usr/bin/bash -i -c stopmicroservices
+ExecStart=/usr/bin/bash -i -c 'while [ "`/{{ cedar_home }}/cedar-cli/check_status.sh Infrastructure`" != "OK" ] ; do sleep 10; done && startmicroservices{{ cedar.external.suffix }}'
+ExecStop=/usr/bin/bash -i -c stopmicroservices{{ cedar.external.suffix }}
 Restart=always
 
 [Install]
