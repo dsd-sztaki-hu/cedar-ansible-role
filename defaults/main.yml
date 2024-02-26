@@ -4,6 +4,7 @@
 
 cedar_home: /usr/local/src/CEDAR
 cedar:
+#  cliversion: release-2.6.39
 #  version: release-2.6.39
   admin_user: cedar-admin
   docker:

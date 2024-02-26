@@ -45,7 +45,7 @@
 - name: clone cedar-cli repo
   git:
     repo: https://github.com/dsd-sztaki-hu/cedar-cli.git
-    version: '{{ cedar.version }}'
+    version: '{{ cedar.cliversion }}'
     dest: '{{ cedar_home }}/cedar-cli'
   tags: git
 
