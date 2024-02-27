@@ -12,7 +12,7 @@
 
 - name: install nodejs and other packages #npm
   package:
-    name: net-tools, joe, python3-venv, maven, docker.io, docker-compose, openjdk-17-jre-headless, nodejs, npm
+    name: net-tools, joe, python3-venv, maven, docker.io, docker-compose, openjdk-17-jre-headless, nodejs #,npm
   register: packages
 
 - name: Reboot the server if fresh install -- this is only needed because of docker
@@ -30,6 +30,7 @@
     search_regex: OpenSSH
     delay: 10
   timeout: 300
+  when: reboot.changed
   connection: local
 
 - name: npm install -g @angular/cli
@@ -135,7 +136,7 @@
 
 - name: generate new salt and hash for admin password
   local_action:
-    module: shell roles/cedar/files/generate_password_hash.py {{ cedar.admin_password }}
+    module: shell roles/cedar/files/generate_password_hash.py {{ cedar.adminpass }}
   register: password_hasher_output
   tags: dockerremote, docker, git
 
@@ -195,8 +196,8 @@
     cmd: bash -i -c '
              docker run -v cedar_cert:/data --name cedar-cert-helper busybox:1.36.0 true &&
              docker cp ${CEDAR_HOME}/CEDAR_CA/certs cedar-cert-helper:/data &&
-             docker run -v cedar_cert:/data --name cedar-cert-helper2 busybox:1.36.0 /bin/sh -c "rm -rf /data/live ; mv /data/certs /data/live" &&
-             docker rm cedar-cert-helper cedar-cert-helper2'
+             docker rm cedar-cert-helper'
+#             docker run -v cedar_cert:/data --name cedar-cert-helper2 busybox:1.36.0 /bin/sh -c "rm -rf /data/live ; mv /data/certs /data/live" && docker rm  cedar-cert-helper2
   tags: docker, certs
   notify: enable and restart cedar
 
