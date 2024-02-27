@@ -134,27 +134,26 @@
   tags: dockerremote, docker, git
   notify: enable and restart cedar
 
-- name: generate new salt and hash for admin password
-  local_action:
-    module: shell roles/cedar/files/generate_password_hash.py {{ cedar.adminpass }}
-  register: password_hasher_output
-  tags: dockerremote, docker, git
+#- name: generate new salt and hash for admin password
+#  local_action:
+#    module: shell roles/cedar/files/generate_password_hash.py {{ cedar.adminpass }}
+#  register: password_hasher_output
+#  tags: dockerremote, docker, git
 
-- set_fact:
-    cedar_admin_password_salt: "{{ password_hasher_output.stdout_lines[0] }}"
-    cedar_admin_password_hash: "{{ password_hasher_output.stdout_lines[0] }}"
-  tags: dockerremote, docker, git
+#- set_fact:
+#    cedar_admin_password_salt: "{{ password_hasher_output.stdout_lines[0] }}"
+#    cedar_admin_password_hash: "{{ password_hasher_output.stdout_lines[1] }}"
+#  tags: dockerremote, docker, git
 
-- name: update admin password in docker build remote
-  replace:
-    path: '{{ cedar_home }}/cedar-docker-build/cedar-infra-keycloak/config/keycloak-realm.CEDAR.development.2023-07-05.json'
-    regexp: '^      "secretData" : .*$'
-    replace: '      "secretData" : "{\"value\":\"{{ cedar_admin_password_hash }}\",\"salt\":\"{{ cedar_admin_password_salt }}\",\"additionalParameters\":{}}",'
-  tags: dockerremote, docker, git
-    
-  when: cedar.docker_build.remote is defined
-  tags: dockerremote, docker, git
-  notify: enable and restart cedar
+#- name: update admin password in docker build remote
+#  replace:
+#    path: '{{ cedar_home }}/cedar-docker-build/cedar-infra-keycloak/config/keycloak-realm.CEDAR.development.2023-07-05.json'
+#    regexp: '^      "secretData" : .*$'
+#    replace: '      "secretData" : "{\"value\":\"{{ cedar_admin_password_hash }}\",\"salt\":\"{{ cedar_admin_password_salt }}\",\"additionalParameters\":{}}",'
+#  tags: dockerremote, docker, git
+#  when: cedar.docker_build.remote is defined
+#  tags: dockerremote, docker, git
+#  notify: enable and restart cedar
 
 - name: change docker deploy remote and checkout different version
   shell:
@@ -232,7 +231,8 @@
   notify: enable and restart {{ item }}
   tags: systemd, services
 
-- meta: flush_handlers
+- name: restart services if necessary
+  meta: flush_handlers
 
 - ansible.builtin.import_tasks: arp_utils.yml
   when: cedar.arp_utils_repo is defined
@@ -244,8 +244,8 @@
     cmd: bash -i -c '
              service cedar-frontend stop &&
              service cedar-infrastructure stop &&
-             docker image rm metadatacenter/cedar-frontend-main:2.6.41 &&
-             docker image rm metadatacenter/cedar-infra-keycloak:2.6.41 &&
+             docker image rm metadatacenter/cedar-frontend-main:2.6.47 &&
+             docker image rm metadatacenter/cedar-infra-keycloak:2.6.47 &&
              service cedar-infrastructure start &&
              service cedar-frontend start'
   tags: never, gui

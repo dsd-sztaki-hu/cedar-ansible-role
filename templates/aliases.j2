@@ -33,16 +33,16 @@ export CEDAR_ARP_DATAVERSE_API_BACKEND_HOST_AND_PORT={{ cedar.dataverse.host }}:
 
 # In production these should be set to sg. Secure.
 # To see all envs use: cedarcli env list
-export CEDAR_CA_PASSWORD="{{ cedar.adminpass }}"
-export CEDAR_KEYCLOAK_ADMIN_PASSWORD="{{ cedar.adminpass }}"
-export CEDAR_KEYCLOAK_MYSQL_PASSWORD="{{ cedar.adminpass }}"
-export CEDAR_LOG_MYSQL_PASSWORD="{{ cedar.adminpass }}"
-export CEDAR_MESSAGING_MYSQL_PASSWORD="{{ cedar.adminpass }}"
-export CEDAR_MONGO_APP_USER_PASSWORD="{{ cedar.adminpass }}"
-export CEDAR_MONGO_ROOT_USER_PASSWORD="{{ cedar.adminpass }}"
-export CEDAR_MYSQL_ROOT_PASSWORD="{{ cedar.adminpass }}"
-export CEDAR_NEO4J_USER_PASSWORD="{{ cedar.adminpass }}"
-export CEDAR_SALT_API_KEY="{{ cedar.key }}"
+export CEDAR_CA_PASSWORD="{{ cedar.CA_PASSWORD }}"
+export CEDAR_KEYCLOAK_ADMIN_PASSWORD="{{ cedar.KEYCLOAK_ADMIN_PASSWORD }}"
+export CEDAR_KEYCLOAK_MYSQL_PASSWORD="{{ cedar.KEYCLOAK_MYSQL_PASSWORD }}"
+export CEDAR_LOG_MYSQL_PASSWORD="{{ cedar.LOG_MYSQL_PASSWORD }}"
+export CEDAR_MESSAGING_MYSQL_PASSWORD="{{ cedar.MESSAGING_MYSQL_PASSWORD }}"
+export CEDAR_MONGO_APP_USER_PASSWORD="{{ cedar.MONGO_APP_USER_PASSWORD }}"
+export CEDAR_MONGO_ROOT_USER_PASSWORD="{{ cedar.MONGO_ROOT_USER_PASSWORD }}"
+export CEDAR_MYSQL_ROOT_PASSWORD="{{ cedar.MYSQL_ROOT_PASSWORD }}"
+export CEDAR_NEO4J_USER_PASSWORD="{{ cedar.NEO4J_USER_PASSWORD }}"
+export CEDAR_SALT_API_KEY="{{ cedar.SALT_API_KEY }}"
 export CEDAR_ADMIN_USER_API_KEY="{{ cedar.key }}"
 
 export CEDAR_BIOPORTAL_API_KEY={{ cedar.bioportal_api_key }}
@@ -52,7 +52,7 @@ export CEDAR_CADSR_ADMIN_USER_API_KEY="{{ cedar.key }}"
 # If you change this, you also have to change secretData for cedar-admin in
 #cedar-docker-build/cedar-infra-keycloak/config/keycloak-realm.CEDAR.development.2023-07-05.json
 # See more information below under 3.2.1.
-export CEDAR_ADMIN_USER_PASSWORD="{{ cedar.adminpass }}"
+#export CEDAR_ADMIN_USER_PASSWORD="{{ cedar.ADMIN_USER_PASSWORD }}"
 
 # Optional: Use other  port than 8080 (eg. when running together with DV which
 # runs at 8080)
