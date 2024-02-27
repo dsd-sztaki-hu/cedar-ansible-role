@@ -136,7 +136,7 @@
 
 #- name: generate new salt and hash for admin password
 #  local_action:
-#    module: shell roles/cedar/files/generate_password_hash.py {{ cedar.adminpass }}
+#    module: shell roles/cedar/files/generate_password_hash_and_salt.py {{ cedar.ADMIN_PASSWORD }}
 #  register: password_hasher_output
 #  tags: dockerremote, docker, git
 
