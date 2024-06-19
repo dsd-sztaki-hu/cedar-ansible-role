@@ -49,6 +49,9 @@ export CEDAR_BIOPORTAL_API_KEY={{ cedar.bioportal_api_key }}
 export CEDAR_BIOPORTAL_REST_BASE="https://data.bioontology.org/"
 export CEDAR_CADSR_ADMIN_USER_API_KEY="{{ cedar.key }}"
 
+export CEDAR_FRONTEND_ARP_FILE_ELEMENT_ID="https://repo.{{ cedar.domain }}/template-elements/b3cbf771-5390-464c-849f-e17218be6728"
+export CEDAR_FRONTEND_ARP_DATASET_ELEMENT_ID="https://repo.{{ cedar.domain }}/template-elements/5ccef400-ddc8-49b2-820c-16d53d0e8f1d"
+
 # If you change this, you also have to change secretData for cedar-admin in
 #cedar-docker-build/cedar-infra-keycloak/config/keycloak-realm.CEDAR.development.2023-07-05.json
 # See more information below under 3.2.1.
