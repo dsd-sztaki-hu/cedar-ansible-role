@@ -15,6 +15,12 @@
     name: net-tools, joe, python3-venv, maven, docker.io, docker-compose, openjdk-17-jre-headless, nodejs #,npm
   register: packages
 
+- name: configure docker logging
+  template:
+    src: docker-daemon.json.j2
+    dest: '/etc/docker/daemon.json'
+  tags: docker-config
+
 - name: Reboot the server if fresh install -- this is only needed because of docker
   shell: "sleep 5 && reboot"
   async: 1
