@@ -21,6 +21,20 @@
     dest: '/etc/docker/daemon.json'
   tags: docker-config
 
+- name: cron job for log rotation
+  cron:
+    name: "compress logs in {{ item }}"
+    cron_file: "ansible"
+    user: root
+    minute: "13"
+    hour: "0"
+    job: 'find {{ item }} -mtime +0 | grep "\.log" | grep -v "\.gz$" | xargs gzip'
+    backup: yes
+  with_items:
+   - /var/lib/docker/overlay2/*/diff/cedar/log/cedar-user-server
+   - /usr/local/src/CEDAR/cedar-docker-deploy/cedar-infrastructure/mount/log_opensearch
+  tags: cron
+
 - name: Reboot the server if fresh install -- this is only needed because of docker
   shell: "sleep 5 && reboot"
   async: 1
