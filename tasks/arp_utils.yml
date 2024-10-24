@@ -21,6 +21,7 @@
   git:
     repo: '{{ cedar.arp_utils_repo }}'
     dest: '{{ cedar_home }}/arp-cedar-utils'
+    version: main
     accept_hostkey: yes
 
 - name: Get admin ID
