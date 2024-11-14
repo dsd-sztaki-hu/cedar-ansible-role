@@ -32,6 +32,9 @@
     backup: yes
   with_items:
    - /var/lib/docker/overlay2/*/diff/cedar/log/cedar-user-server
+   - /var/lib/docker/overlay2/*/diff/cedar/log/cedar-terminology-server
+   - /var/lib/docker/overlay2/*/diff/cedar/log/cedar-resource-server
+   - /usr/local/src/CEDAR/cedar-docker-deploy/cedar-infrastructure/mount/log_mongo
    - /usr/local/src/CEDAR/cedar-docker-deploy/cedar-infrastructure/mount/log_opensearch
   tags: cron
 
