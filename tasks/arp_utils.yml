@@ -30,6 +30,7 @@
     cmd: bash -i -c "python get_admin_id.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }}"
   register: admin_id_output
   changed_when: false
+  tags: create_builtin_folders
 
 - name: get dataverse folder id
   shell:
@@ -51,6 +52,7 @@
   shell:
     chdir: '{{ cedar_home }}/arp-cedar-utils'
     cmd: bash -i -c "python create_builtin_folders.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }} --user-id {{ admin_id_output.stdout }}"
+  tags: create_builtin_folders
 
 #- name: upload test dump for demoing
 #  shell:
