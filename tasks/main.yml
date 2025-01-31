@@ -292,3 +292,9 @@
              service cedar-infrastructure start &&
              service cedar-frontend start'
   tags: never, gui
+
+- name: Configure local hosts entries
+  ansible.builtin.import_tasks: local_hosts.yml
+  tags: 
+    - hosts
+    - cedar_hosts
