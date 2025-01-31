@@ -1,4 +1,3 @@
-
 - name: enable and restart cedar-infrastructure
   service: name=cedar-infrastructure enabled=yes state=restarted
 
@@ -7,6 +6,9 @@
 
 - name: enable and restart cedar-frontend
   service: name=cedar-frontend enabled=yes state=restarted
+
+- name: enable and restart cedar-mount-permissions
+  service: name=cedar-mount-permissions enabled=yes state=restarted
 
 - name: enable and restart cedar
   service: name=cedar-{{ item }} enabled=yes state=restarted

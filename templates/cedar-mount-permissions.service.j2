@@ -1,0 +1,29 @@
+[Unit]
+Description=CEDAR mount permissions monitor
+After=docker.service
+PartOf=cedar-infrastructure.service
+
+[Service]
+Type=simple
+Environment="CEDAR_HOME={{ cedar_home }}"
+ExecStart=/bin/bash -c '\
+  MOUNT_DIR="${CEDAR_HOME}/cedar-docker-deploy/cedar-infrastructure/mount"; \
+  while true; do \
+    if [ ! -d "$MOUNT_DIR" ]; then \
+      echo "[$(date)] Waiting for mount directory to be created..."; \
+      inotifywait -e create -e moved_to "$(dirname $MOUNT_DIR)"; \
+      continue; \
+    fi; \
+    echo "[$(date)] Setting initial permissions on $MOUNT_DIR"; \
+    chmod 777 "$MOUNT_DIR"; \
+    echo "[$(date)] Monitoring for new directories in $MOUNT_DIR"; \
+    inotifywait -m -e create -e moved_to --format "%%w%%f" "$MOUNT_DIR" | while read path; do \
+      echo "[$(date)] New directory detected: $path"; \
+      chmod -R a+w "$path"; \
+      echo "[$(date)] Permissions set on: $path"; \
+    done; \
+  done'
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target 

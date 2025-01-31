@@ -12,7 +12,7 @@
 
 - name: install nodejs and other packages #npm
   package:
-    name: net-tools, joe, python3-venv, maven, docker.io, docker-compose, openjdk-17-jre-headless, nodejs #,npm
+    name: net-tools, joe, python3-venv, maven, docker.io, docker-compose, openjdk-17-jre-headless, nodejs, inotify-tools #,npm
   register: packages
 
 - name: configure docker logging
@@ -52,9 +52,11 @@
     host: '{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}'
     search_regex: OpenSSH
     delay: 10
-  timeout: 300
+    timeout: 300
   when: reboot.changed
   connection: local
+  vars:
+    ansible_python_interpreter: "{{ lookup('env', 'LOCAL_PYTHON_PATH') | default(lookup('pipe', 'which python3')) }}"
 
 - name: npm install -g @angular/cli
   community.general.npm:
@@ -212,6 +214,24 @@
     cmd: bash -i -c "cedarcli docker one-time-setup"
   tags: docker
 
+- name: Set permissions on infrastructure mount directories if they exist
+  ansible.builtin.file:
+    path: "{{ cedar_home }}/cedar-docker-deploy/cedar-infrastructure/mount"
+    mode: "777"
+    recurse: yes
+  when: ansible_check_mode is not defined or not ansible_check_mode
+  ignore_errors: yes
+  tags: docker, permissions
+
+- name: Install mount permissions monitor service
+  template:
+    src: cedar-mount-permissions.service.j2
+    dest: /etc/systemd/system/cedar-mount-permissions.service
+    owner: root
+    group: root
+  notify: enable and restart cedar-mount-permissions
+  tags: docker, permissions, services
+
 - name: Copying self-signed certificates into the cedar_cert volume...
   shell:
     chdir: '{{ cedar_home }}/cedar-cli'
@@ -234,11 +254,11 @@
   notify: enable and restart cedar
 
 # This may not be necessary ...
-- name: cedarcli build all
-  shell:
-    chdir: '{{ cedar_home }}/cedar-cli'
-    cmd: bash -i -c "cedarcli build all"
-  tags: build
+# - name: cedarcli build all
+#   shell:
+#     chdir: '{{ cedar_home }}/cedar-cli'
+#     cmd: bash -i -c "cedarcli build all"
+#   tags: build
 
 
 - name: install cedar systemd service files

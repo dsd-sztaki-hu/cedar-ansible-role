@@ -32,7 +32,7 @@ cedar:
     org_unit: CEDAR
     email: metadatacenter@gmail.com
   java:
-    home: /usr/lib/jvm/java-17-openjdk-amd64
+    home: "/usr/lib/jvm/java-17-openjdk-{{ arch | default('amd64') }}"
   cli: '{{ cedar_home }}/cedar-cli/cli.sh'
   external:
     suffix: ext
