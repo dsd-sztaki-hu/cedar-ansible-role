@@ -1,0 +1,64 @@
+---
+
+- name: Debug local hosts configuration
+  ansible.builtin.debug:
+    msg: 
+      - "Local hosts modification enabled: {{ cedar_modify_local_hosts }}"
+      - "Using IP address: {{ lookup('env', 'DEMO_ANSIBLE_HOST_IP') }}"
+      - "Cedar domain: {{ cedar.domain }}"
+  tags: [never, cedar-local-hosts]
+
+- name: Check if local hosts modification is enabled
+  ansible.builtin.fail:
+    msg: "Local hosts modification is disabled. Set cedar_modify_local_hosts: true to enable."
+  when: not cedar_modify_local_hosts | default(false) | bool
+  tags: [never, cedar-local-hosts]
+
+- name: Check if DEMO_ANSIBLE_HOST_IP is set
+  ansible.builtin.set_fact:
+    demo_host_ip: "{{ lookup('env', 'DEMO_ANSIBLE_HOST_IP') }}"
+  tags: [never, cedar-local-hosts]
+
+- name: Generate local hosts file part
+  ansible.builtin.template:
+    src: hosts_part.j2
+    dest: /tmp/cedar_local_hosts_part
+  vars:
+    cedar_hosts_ip: "{{ demo_host_ip }}"
+  delegate_to: localhost
+  when: cedar_modify_local_hosts | default(false) | bool and demo_host_ip != ""
+  tags: [never, cedar-local-hosts]
+
+- name: Read generated local hosts part
+  ansible.builtin.slurp:
+    src: /tmp/cedar_local_hosts_part
+  register: hosts_file_part
+  delegate_to: localhost
+  when: cedar_modify_local_hosts | default(false) | bool and demo_host_ip != ""
+  tags: [never, cedar-local-hosts]
+
+- name: Debug content to be added to /etc/hosts
+  ansible.builtin.debug:
+    msg: "Content to be added to /etc/hosts:\n{{ hosts_file_part['content'] | b64decode if hosts_file_part is defined else 'No content generated yet' }}"
+  when: cedar_modify_local_hosts | default(false) | bool and demo_host_ip != ""
+  tags: [never, cedar-local-hosts]
+
+- name: Add Cedar domain entries to local /etc/hosts (requires sudo)
+  ansible.builtin.blockinfile:
+    path: /etc/hosts
+    block: "{{ hosts_file_part['content'] | b64decode }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - CEDAR DOMAINS"
+    create: true
+    backup: true
+  become: true
+  become_method: sudo
+  delegate_to: localhost
+  when: cedar_modify_local_hosts | default(false) | bool and demo_host_ip != ""
+  register: hosts_update
+  tags: [never, cedar-local-hosts]
+
+- name: Show local hosts file update status
+  ansible.builtin.debug:
+    msg: "Local /etc/hosts file has been updated with Cedar domain entries"
+  when: hosts_update.changed 
+  tags: [never, cedar-local-hosts]
