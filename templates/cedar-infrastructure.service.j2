@@ -8,7 +8,9 @@ Environment="CEDAR_HOME={{ cedar_home }}"
 Environment="JAVA_HOME={{ cedar.java.home }}"
 Environment="CEDAR_BIOPORTAL_API_KEY={{ cedar.bioportal_api_key }}"
 WorkingDirectory={{ cedar_home }}
-ExecStart=/usr/bin/bash -i -c startinfrastructure{{ cedar.external.suffix }}
+# infra-neo4j sometimes does not start when not properly shut down previously
+# Running stopinfrastructure first ensures we start from a clean state
+ExecStart=/usr/bin/bash -i -c "stopinfrastructure{{ cedar.external.suffix } && startinfrastructure{{ cedar.external.suffix }}"
 ExecStop=/usr/bin/bash -i -c stopinfrastructure{{ cedar.external.suffix }}
 Restart=always
 
