@@ -47,7 +47,7 @@
   ansible.builtin.blockinfile:
     path: /etc/hosts
     block: "{{ hosts_file_part['content'] | b64decode }}"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK - CEDAR DOMAINS"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - CEDAR DOMAINS - {{ cedar.domain }}"
     create: true
     backup: true
   become: true

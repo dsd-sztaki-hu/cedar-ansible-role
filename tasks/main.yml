@@ -297,4 +297,4 @@
   ansible.builtin.import_tasks: local_hosts.yml
   tags: 
     - hosts
-    - cedar_hosts
+    - cedar-hosts
