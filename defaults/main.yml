@@ -36,3 +36,4 @@ cedar:
   cli: '{{ cedar_home }}/cedar-cli/cli.sh'
   external:
     suffix: ext
+  build_all: false

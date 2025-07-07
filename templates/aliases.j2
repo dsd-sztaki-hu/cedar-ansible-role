@@ -11,6 +11,7 @@ source {{ item }}
 # these are partly overridden below
 
 export CEDAR_HOST={{ cedar.domain }}
+export CEDAR_KEYCLOAK_HTTP_PORT=8080
 
 export CEDAR_CA_PASSWORD={{ cedar.ca.password }}
 export CEDAR_CA_HOME={{ cedar.ca.home }}

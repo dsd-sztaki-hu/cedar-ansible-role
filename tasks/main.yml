@@ -201,7 +201,7 @@
     cmd: bash -i -c "cedarcli cert setup &&
                      cedarcli cert ca &&
                      cedarcli cert domains"
-  when: cedar.ca.enabled and not ca_cert.stat.exists
+  when: cedar.ca.enabled and (ca_cert is not defined or not ca_cert.stat.exists)
   notify: enable and restart cedar-infrastructure
   tags: certs
   notify: enable and restart cedar
@@ -219,7 +219,8 @@
              docker run -v cedar_cert:/data --name cedar-cert-helper busybox:1.36.0 true &&
              docker cp ${CEDAR_HOME}/CEDAR_CA/certs cedar-cert-helper:/data &&
              docker rm cedar-cert-helper'
-#             docker run -v cedar_cert:/data --name cedar-cert-helper2 busybox:1.36.0 /bin/sh -c "rm -rf /data/live ; mv /data/certs /data/live" && docker rm  cedar-cert-helper2
+#             docker run -v cedar_cert:/data --name cedar-cert-helper2 busybox:1.36.0 /bin/sh -c "rm -rf /data/live ; cd /data ; ln -s certs live" &&
+#             docker rm cedar-cert-helper cedar-cert-helper2'
   tags: docker, certs
   notify: enable and restart cedar
 
@@ -239,6 +240,7 @@
     chdir: '{{ cedar_home }}/cedar-cli'
     cmd: bash -i -c "cedarcli build all"
   tags: build
+  when: cedar.build_all
 
 
 - name: install cedar systemd service files
