@@ -14,3 +14,10 @@
    - infrastructure
    - microservices
    - frontend
+
+- name: stop cedar
+  service: name=cedar-{{ item }} enabled=yes state=stopped
+  with_items:
+   - infrastructure
+   - microservices
+   - frontend
