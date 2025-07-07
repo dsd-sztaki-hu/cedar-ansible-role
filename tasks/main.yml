@@ -136,7 +136,9 @@
     chdir: '{{ cedar_home }}/cedar-cli'
     cmd: bash -i -c "cedarcli git pull"
   tags: cedargits, git
-  notify: enable and restart cedar
+  notify:
+   - stop cedar
+   - enable and restart cedar
 
 # Don't do this now, we expect that our main version matches the version we want to install. May reveisit later.
 - name: clone requested version with cedarcli
@@ -155,7 +157,9 @@
          git checkout {{ cedar.docker_build.remote.version }}"
   when: cedar.docker_build.remote is defined
   tags: dockerremote, docker, git
-  notify: enable and restart cedar
+  notify:
+   - stop cedar
+   - enable and restart cedar
 
 #- name: generate new salt and hash for admin password
 #  local_action:
@@ -187,7 +191,9 @@
          git checkout {{ cedar.docker_deploy.remote.version }}"
   when: cedar.docker_deploy.remote is defined
   tags: dockerremote, docker, git
-  notify: enable and restart cedar
+  notify:
+   - stop cedar
+   - enable and restart cedar
 
 - name: Check if ca.crt exists
   stat:
@@ -202,9 +208,13 @@
                      cedarcli cert ca &&
                      cedarcli cert domains"
   when: cedar.ca.enabled and (ca_cert is not defined or not ca_cert.stat.exists)
-  notify: enable and restart cedar-infrastructure
   tags: certs
-  notify: enable and restart cedar
+  notify:
+   - stop cedar
+   - enable and restart cedar
+  notify:
+   - stop cedar
+   - enable and restart cedar
 
 - name: cedarcli docker one-time-setup
   shell:
@@ -222,7 +232,9 @@
 #             docker run -v cedar_cert:/data --name cedar-cert-helper2 busybox:1.36.0 /bin/sh -c "rm -rf /data/live ; cd /data ; ln -s certs live" &&
 #             docker rm cedar-cert-helper cedar-cert-helper2'
   tags: docker, certs
-  notify: enable and restart cedar
+  notify:
+   - stop cedar
+   - enable and restart cedar
 
 - name: Copying CA certificate into the cedar_ca volume...
   shell:
