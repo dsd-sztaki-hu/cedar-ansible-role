@@ -212,9 +212,6 @@
   notify:
    - stop cedar
    - enable and restart cedar
-  notify:
-   - stop cedar
-   - enable and restart cedar
 
 - name: cedarcli docker one-time-setup
   shell:
