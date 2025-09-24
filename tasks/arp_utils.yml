@@ -40,6 +40,7 @@
   changed_when: false
   failed_when: false
   when: delete_dataverse_folder is defined and delete_dataverse_folder
+  tags: create_builtin_folders
 
 - name: Delete dataverse folder if asked
   shell:
@@ -47,6 +48,7 @@
     cmd: bash -i -c "python delete_folder.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }} --folder-id {{ dataverse_folder_id_output.stdout }}"
   failed_when: false
   when: delete_dataverse_folder is defined and delete_dataverse_folder
+  tags: create_builtin_folders
 
 - name: Create builtin folders
   shell:

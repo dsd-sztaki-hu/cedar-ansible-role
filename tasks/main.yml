@@ -195,6 +195,19 @@
    - stop cedar
    - enable and restart cedar
 
+- name: change docker terminology remote and checkout different version
+  shell:
+    chdir: '{{ cedar_home }}/cedar-terminology-server'
+    cmd: bash -i -c "git remote | grep -q "{{ cedar.docker_terminology.remote.name }}" || 
+         git remote add {{ cedar.docker_terminology.remote.name }} {{ cedar.docker_terminology.remote.url }} && 
+         git fetch {{ cedar.docker_terminology.remote.name }} && 
+         git checkout {{ cedar.docker_terminology.remote.version }}"
+  when: cedar.docker_terminology.remote is defined
+  tags: dockerremote, docker, git
+  notify:
+   - stop cedar
+   - enable and restart cedar
+
 - name: Check if ca.crt exists
   stat:
     path: /usr/local/src/CEDAR/CEDAR_CA/ca.crt
