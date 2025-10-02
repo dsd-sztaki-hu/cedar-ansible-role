@@ -58,7 +58,7 @@ export CEDAR_FRONTEND_ARP_DATASET_ELEMENT_ID="https://repo.{{ cedar.domain }}/te
 # If you change this, you also have to change secretData for cedar-admin in
 #cedar-docker-build/cedar-infra-keycloak/config/keycloak-realm.CEDAR.development.2023-07-05.json
 # See more information below under 3.2.1.
-#export CEDAR_ADMIN_USER_PASSWORD="{{ cedar.ADMIN_USER_PASSWORD }}"
+export CEDAR_ADMIN_USER_PASSWORD="{{ cedar.ADMIN_USER_PASSWORD }}"
 
 # Optional: Use other  port than 8080 (eg. when running together with DV which
 # runs at 8080)
