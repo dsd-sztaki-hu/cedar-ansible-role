@@ -141,12 +141,14 @@
    - enable and restart cedar
 
 # Don't do this now, we expect that our main version matches the version we want to install. May reveisit later.
-- name: clone requested version with cedarcli
+- name: checkout requested version with cedarcli
   shell:
     chdir: '{{ cedar_home }}/cedar-cli'
-    cmd: bash -i -c "cedarcli git checkout {{ cedar.version }}"
+    cmd: bash -i -c "cedarcli git checkout {{ cedar.version }} | grep -c \"^error. .* did not match any file\""
   when: cedar.version is defined
-  tags: cedargits, git
+  tags: cedargits, git, cedargitcheckout
+  register: cedarcli_git_checkout
+  failed_when: (cedarcli_git_checkout.stdout | int > 3)
 
 - name: change docker build remote and checkout different version
   shell:
