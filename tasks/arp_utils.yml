@@ -27,7 +27,7 @@
 - name: Get admin ID
   shell:
     chdir: '{{ cedar_home }}/arp-cedar-utils'
-    cmd: bash -i -c "python get_admin_id.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }}"
+    cmd: bash -i -c "{{ discovered_interpreter_python }} get_admin_id.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }}"
   register: admin_id_output
   changed_when: false
   tags: create_builtin_folders
@@ -35,7 +35,7 @@
 - name: get dataverse folder id
   shell:
     chdir: '{{ cedar_home }}/arp-cedar-utils'
-    cmd: bash -i -c "python folder_to_id.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }} --path 'All/Users/CEDAR Admin/Public/Dataverse'"
+    cmd: bash -i -c "{{ discovered_interpreter_python }} folder_to_id.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }} --path 'All/Users/CEDAR Admin/Public/Dataverse'"
   register: dataverse_folder_id_output
   changed_when: false
   failed_when: false
@@ -45,7 +45,7 @@
 - name: Delete dataverse folder if asked
   shell:
     chdir: '{{ cedar_home }}/arp-cedar-utils'
-    cmd: bash -i -c "python delete_folder.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }} --folder-id {{ dataverse_folder_id_output.stdout }}"
+    cmd: bash -i -c "{{ discovered_interpreter_python }} delete_folder.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }} --folder-id {{ dataverse_folder_id_output.stdout }}"
   failed_when: false
   when: delete_dataverse_folder is defined and delete_dataverse_folder
   tags: create_builtin_folders
@@ -53,7 +53,7 @@
 - name: Create builtin folders
   shell:
     chdir: '{{ cedar_home }}/arp-cedar-utils'
-    cmd: bash -i -c "python create_builtin_folders.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }} --user-id {{ admin_id_output.stdout }}"
+    cmd: bash -i -c "{{ discovered_interpreter_python }} create_builtin_folders.py --base-domain {{ cedar.domain }} --api-key {{ cedar.key }} --user-id {{ admin_id_output.stdout }}"
   tags: create_builtin_folders
 
 #- name: upload test dump for demoing
