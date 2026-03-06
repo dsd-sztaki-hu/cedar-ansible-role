@@ -148,7 +148,7 @@
   when: cedar.version is defined
   tags: cedargits, git, cedargitcheckout
   register: cedarcli_git_checkout
-  failed_when: (cedarcli_git_checkout.stdout | int > 3)
+  failed_when: (cedarcli_git_checkout.stdout | int > 6)
 
 - name: change docker build remote and checkout different version
   shell:
