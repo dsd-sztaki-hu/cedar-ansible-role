@@ -64,9 +64,16 @@ export CEDAR_ADMIN_USER_PASSWORD="{{ cedar.ADMIN_USER_PASSWORD }}"
 # runs at 8080)
 export CEDAR_KEYCLOAK_HTTP_PORT=8080
 
-
 alias python=python3
 
 alias cedarcli='source $CEDAR_HOME/cedar-cli/cli.sh'
 #alias cedarcli=$CEDAR_HOME/cedar-cli/cli.sh
 
+{% if cedar.nexus_base is defined %}
+export NEXUS_BASE={{ cedar.nexus_base }}
+export CEDAR_MAVEN_REPO_URL=${NEXUS_BASE}
+export CEDAR_DOCKER_SRC_HOME=${CEDAR_HOME}
+export CEDAR_NPM_REGISTRY=${NEXUS_BASE}/repository/npm-cedar
+export CEDAR_MAVEN_SNAPSHOTS_URL=${NEXUS_BASE}/repository/maven-snapshots
+export CEDAR_MAVEN_RELEASES_URL=${NEXUS_BASE}/repository/maven-releases
+{% endif %}
