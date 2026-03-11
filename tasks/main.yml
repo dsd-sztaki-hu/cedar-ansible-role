@@ -150,18 +150,38 @@
   register: cedarcli_git_checkout
   failed_when: (cedarcli_git_checkout.stdout | int > 6)
 
-- name: change docker build remote and checkout different version
-  shell:
-    chdir: '{{ cedar_home }}/cedar-docker-build'
-    cmd: bash -i -c "git remote | grep -q "{{ cedar.docker_build.remote.name }}" ||
-         git remote add {{ cedar.docker_build.remote.name }} {{ cedar.docker_build.remote.url }} && 
-         git fetch {{ cedar.docker_build.remote.name }} && 
-         git checkout {{ cedar.docker_build.remote.version }}"
-  when: cedar.docker_build.remote is defined
-  tags: dockerremote, docker, git
-  notify:
-   - stop cedar
-   - enable and restart cedar
+- name: run "cedarcli arp git override"
+  shell: 
+    chdir: '{{ cedar_home }}/cedar-cli'
+    cmd: bash -i -c "cedarcli arp git override"
+  when: cedar.cliversion is defined and "arp-" in cedar.cliversion
+  tags: cedargits, git, cedargitcheckout
+
+#- name: change cedar-cli build remote and checkout different version
+#  shell:
+#    chdir: '{{ cedar_home }}/cedar-docker-build'
+#    cmd: bash -i -c "git remote | grep -q "{{ cedar.cli.remote.name }}" ||
+#         git remote add {{ cedar.cli.remote.name }} {{ cedar.cli.remote.url }} && 
+#         git fetch {{ cedar.cli.remote.name }} && 
+#         git checkout {{ cedar.cli.remote.version }}"
+#  when: cedar.cli.remote is defined
+#  tags: dockerremote, docker, git
+#  notify:
+#   - stop cedar
+#   - enable and restart cedar
+
+#- name: change docker build remote and checkout different version
+#  shell:
+#    chdir: '{{ cedar_home }}/cedar-docker-build'
+#    cmd: bash -i -c "git remote | grep -q "{{ cedar.docker_build.remote.name }}" ||
+#         git remote add {{ cedar.docker_build.remote.name }} {{ cedar.docker_build.remote.url }} && 
+#         git fetch {{ cedar.docker_build.remote.name }} && 
+#         git checkout {{ cedar.docker_build.remote.version }}"
+#  when: cedar.docker_build.remote is defined
+#  tags: dockerremote, docker, git
+#  notify:
+#   - stop cedar
+#   - enable and restart cedar
 
 #- name: generate new salt and hash for admin password
 #  local_action:
@@ -184,31 +204,31 @@
 #  tags: dockerremote, docker, git
 #  notify: enable and restart cedar
 
-- name: change docker deploy remote and checkout different version
-  shell:
-    chdir: '{{ cedar_home }}/cedar-docker-deploy'
-    cmd: bash -i -c "git remote | grep -q "{{ cedar.docker_deploy.remote.name }}" || 
-         git remote add {{ cedar.docker_deploy.remote.name }} {{ cedar.docker_deploy.remote.url }} && 
-         git fetch {{ cedar.docker_deploy.remote.name }} && 
-         git checkout {{ cedar.docker_deploy.remote.version }}"
-  when: cedar.docker_deploy.remote is defined
-  tags: dockerremote, docker, git
-  notify:
-   - stop cedar
-   - enable and restart cedar
+#- name: change docker deploy remote and checkout different version
+#  shell:
+#    chdir: '{{ cedar_home }}/cedar-docker-deploy'
+#    cmd: bash -i -c "git remote | grep -q "{{ cedar.docker_deploy.remote.name }}" || 
+#         git remote add {{ cedar.docker_deploy.remote.name }} {{ cedar.docker_deploy.remote.url }} && 
+#         git fetch {{ cedar.docker_deploy.remote.name }} && 
+#         git checkout {{ cedar.docker_deploy.remote.version }}"
+#  when: cedar.docker_deploy.remote is defined
+#  tags: dockerremote, docker, git
+#  notify:
+#   - stop cedar
+#   - enable and restart cedar
 
-- name: change docker terminology remote and checkout different version
-  shell:
-    chdir: '{{ cedar_home }}/cedar-terminology-server'
-    cmd: bash -i -c "git remote | grep -q "{{ cedar.docker_terminology.remote.name }}" || 
-         git remote add {{ cedar.docker_terminology.remote.name }} {{ cedar.docker_terminology.remote.url }} && 
-         git fetch {{ cedar.docker_terminology.remote.name }} && 
-         git checkout {{ cedar.docker_terminology.remote.version }}"
-  when: cedar.docker_terminology.remote is defined
-  tags: dockerremote, docker, git
-  notify:
-   - stop cedar
-   - enable and restart cedar
+#- name: change docker terminology remote and checkout different version
+#  shell:
+#    chdir: '{{ cedar_home }}/cedar-terminology-server'
+#    cmd: bash -i -c "git remote | grep -q "{{ cedar.docker_terminology.remote.name }}" || 
+#         git remote add {{ cedar.docker_terminology.remote.name }} {{ cedar.docker_terminology.remote.url }} && 
+#         git fetch {{ cedar.docker_terminology.remote.name }} && 
+#         git checkout {{ cedar.docker_terminology.remote.version }}"
+#  when: cedar.docker_terminology.remote is defined
+#  tags: dockerremote, docker, git
+#  notify:
+#   - stop cedar
+#   - enable and restart cedar
 
 - name: Check if ca.crt exists
   stat:
