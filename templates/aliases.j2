@@ -77,3 +77,7 @@ export CEDAR_NPM_REGISTRY=${NEXUS_BASE}/repository/npm-cedar
 export CEDAR_MAVEN_SNAPSHOTS_URL=${NEXUS_BASE}/repository/maven-snapshots
 export CEDAR_MAVEN_RELEASES_URL=${NEXUS_BASE}/repository/maven-releases
 {% endif %}
+
+{% if GITHUB_TOKEN is defined %}
+export GITHUB_TOKEN={{ GITHUB_TOKEN }}
+{% endif %}
