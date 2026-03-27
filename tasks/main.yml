@@ -148,14 +148,14 @@
   when: cedar.version is defined
   tags: cedargits, git, cedargitcheckout
   register: cedarcli_git_checkout
-  failed_when: (cedarcli_git_checkout.stdout | int > 6)
+  failed_when: (cedarcli_git_checkout.stdout | int > 8)
 
 - name: run "cedarcli arp git override"
   shell: 
     chdir: '{{ cedar_home }}/cedar-cli'
     cmd: bash -i -c "cedarcli arp git override"
   when: cedar.cliversion is defined and "arp-" in cedar.cliversion
-  tags: cedargits, git, cedargitcheckout
+  tags: cedargits, git, cedargitcheckout, gitoverride
 
 #- name: change cedar-cli build remote and checkout different version
 #  shell:
@@ -297,7 +297,9 @@
     - cedar-infrastructure
     - cedar-microservices
     - cedar-frontend
-  notify: enable and restart {{ item }}
+  notify:
+   - enable and restart {{ item }}
+   - systemd reload service files
   tags: systemd, services
 
 - name: restart services if necessary

@@ -21,3 +21,6 @@
    - microservices
    - frontend
 
+- name: systemd reload service files
+  ansible.builtin.systemd_service:
+    daemon_reload: true
