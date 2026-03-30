@@ -298,8 +298,8 @@
     - cedar-microservices
     - cedar-frontend
   notify:
-   - enable and restart {{ item }}
    - systemd reload service files
+   - enable and restart {{ item }}
   tags: systemd, services
 
 - name: restart services if necessary
